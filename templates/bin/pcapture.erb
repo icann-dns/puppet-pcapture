@@ -1,0 +1,49 @@
+#!/bin/sh
+PATH=/usr/local/bin:/usr/bin:/bin:/usr/sbin
+<%- 
+@dst = nil
+if @collect_ans and @collect_qry then
+  @dst = ''
+elsif @collect_qry then
+  @dst = 'dst'
+elsif @collect_ans then
+  @dst = 'src'
+else
+  raise Puppet::Error, "invalid cfg, collect_ans and collect_qry are both == false"
+end
+-%>
+INTERFACES="<%= @interfaces.keys.join(' ') %>"
+DIR=<%= @data %>
+INTERVAL=<%= @interval %>
+
+# If this script has been updated we kill any running dumps so that they will be restarted with any new settings
+
+pct=$( df ${DIR} | tail -1 | awk '{print $5}' | tr -d '%' )
+
+for INT in ${INTERFACES}; do
+<%- if @kernel == 'FreeBSD' -%>
+  LOCK=/var/run/pcapture_${INT}.lock
+<%- else -%>
+  LOCK=/var/lock/pcapture_${INT}.lock
+<%- end -%>
+  if [ <%= @tools %>/pcapture -nt ${LOCK} ]; then
+    logger -t pcapture script updated, killing tcpdump for ${INT} 
+    fuser -k ${LOCK} 
+    touch ${LOCK}
+  elif [ ${pct} -ge 80 ]; then
+    logger -t pcapture ${pct}% of ${DIR} used, not capturing
+    if [ -e ${LOCK} ]; then
+      logger -t pcapture killing tcpdump with pid
+      fuser -k ${LOCK}
+    fi
+  else
+    flock -n ${LOCK} /usr/sbin/tcpdump -i ${INT} -nn -s0 \
+      -w ${DIR}/%Y%m%d-%H%M%S_${INTERVAL}_${INT}.pcap -z xz_wrapper.sh -G ${INTERVAL} \
+      '<%= @dst %> net ( 
+<%- @ip_addresses.each_with_index do |addr, index| -%>
+<%= addr %> <%- if index < @ip_addresses.size - 1 -%> or <%- end -%>
+<%- end -%>
+        )' > /dev/null 2>&1 && \
+      logger -t pcapture starting tcpdump on ${INT} &
+  fi
+done

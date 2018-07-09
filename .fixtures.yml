@@ -1,0 +1,8 @@
+fixtures:
+    symlinks:
+      pcapture: "#{source_dir}"
+    repositories:
+      stdlib:
+        repo: https://github.com/puppetlabs/puppetlabs-stdlib.git
+        ref: 4.25.1
+    forge_modules:
