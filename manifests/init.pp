@@ -27,7 +27,7 @@ class pcapture (
   Stdlib::Absolutepath       $data          = '/opt/pcap',
   Boolean                    $collect_ans   = false,
   Boolean                    $collect_qry   = true,
-  Optional[String]           $tcpdump_param = ~,
+  Optional[String]           $tcpdump_param = undef,
   Array[Stdlib::Ip::Address] $ip_addresses  = [],
   Integer[1,3600]            $interval      = 300,
   Stdlib::Absolutepath       $xz_wrapper    = '/usr/local/bin/xz_wrapper.sh',
