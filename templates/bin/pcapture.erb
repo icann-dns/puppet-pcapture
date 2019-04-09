@@ -49,6 +49,6 @@ for INT in ${INTERFACES}; do
 <% else %>
       '<%= @tcpdump_param %>' > /dev/null 2>&1 && \
       logger -t pcapture starting tcpdump on ${INT} &
-%- end %>
+<%- end %>
   fi
 done
