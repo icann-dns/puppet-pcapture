@@ -45,9 +45,10 @@ for INT in ${INTERFACES}; do
 <%= addr %> <%- if index < @ip_addresses.size - 1 -%> or <%- end -%>
 <%- end -%>
         )' > /dev/null 2>&1 && \
+      logger -t pcapture starting tcpdump on ${INT} &
 <% else %>
       '<%= @tcpdump_param %>' > /dev/null 2>&1 && \
-%- end %>
       logger -t pcapture starting tcpdump on ${INT} &
+%- end %>
   fi
 done
