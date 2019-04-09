@@ -43,7 +43,7 @@ for INT in ${INTERFACES}; do
       '<%= @dst %> net ( 
 <%- @ip_addresses.each_with_index do |addr, index| -%>
 <%= addr %> <%- if index < @ip_addresses.size - 1 -%> or <%- end -%>
-<%- end -%>
+<%- end %>
         )' > /dev/null 2>&1 && \
       logger -t pcapture starting tcpdump on ${INT} &
 <% else %>
