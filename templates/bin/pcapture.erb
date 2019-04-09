@@ -42,13 +42,12 @@ for INT in ${INTERFACES}; do
 <% if @tcpdump_param == 'undef' -%>
       '<%= @dst %> net ( 
 <%- @ip_addresses.each_with_index do |addr, index| -%>
-<%= addr %> <%- if index < @ip_addresses.size - 1 -%> or <%- end -%>
+<%= addr %> <%- if index < @ip_addresses.size - 1 -%> or <%- end %>
 <%- end %>
         )' > /dev/null 2>&1 && \
-      logger -t pcapture starting tcpdump on ${INT} &
 <% else %>
       '<%= @tcpdump_param %>' > /dev/null 2>&1 && \
-      logger -t pcapture starting tcpdump on ${INT} &
 <%- end %>
+      logger -t pcapture starting tcpdump on ${INT} &
   fi
 done
