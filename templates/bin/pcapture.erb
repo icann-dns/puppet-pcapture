@@ -12,7 +12,7 @@ else
   raise Puppet::Error, "invalid cfg, collect_ans and collect_qry are both == false"
 end
 -%>
-INTERFACES="<%= @_interfaces.keys.join(' ') %>"
+INTERFACES="<%= @_interfaces.each do |eth| if ! eth.start_with?('dummy', 'lo') then eth.join(' ') %>"
 DIR=<%= @data %>
 INTERVAL=<%= @interval %>
 
@@ -43,11 +43,11 @@ for INT in ${INTERFACES}; do
       '<%= @dst %> net ( 
 <%- @ip_addresses.each_with_index do |addr, index| -%>
 <%= addr %> <%- if index < @ip_addresses.size - 1 -%> or <%- end %>
-<%- end %>
+<% end %>
         )' > /dev/null 2>&1 && \
 <% else %>
       '<%= @tcpdump_param %>' > /dev/null 2>&1 && \
-<%- end %>
+<% end %>
       logger -t pcapture starting tcpdump on ${INT} &
   fi
 done
