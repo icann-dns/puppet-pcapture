@@ -39,11 +39,14 @@ for INT in ${INTERFACES}; do
   else
     flock -n ${LOCK} /usr/sbin/tcpdump -i ${INT} -nn -s0 \
       -w ${DIR}/%Y%m%d-%H%M%S_${INTERVAL}_${INT}.pcap -z xz_wrapper.sh -G ${INTERVAL} \
+<% if @tcpdump_param.empty? -%>
       '<%= @dst %> net ( 
 <%- @ip_addresses.each_with_index do |addr, index| -%>
 <%= addr %> <%- if index < @ip_addresses.size - 1 -%> or <%- end -%>
 <%- end -%>
         )' > /dev/null 2>&1 && \
+<% else %>
+      '<%= @tcpdump_param %>' > /dev/null 2>&1 && \
       logger -t pcapture starting tcpdump on ${INT} &
   fi
 done
