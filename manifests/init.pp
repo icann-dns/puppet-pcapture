@@ -39,7 +39,7 @@ class pcapture (
     default => 'absent',
   }
   $_interfaces = $interfaces ? {
-    undef   => $facts['networking']['interfaces'].keys(),
+    undef   => $facts['networking']['interfaces'],
     default => $interfaces,
   }
   $_directories = [ $data, ]
