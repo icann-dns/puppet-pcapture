@@ -21,7 +21,6 @@
 # @param interfaces
 #   This should be aliased to the network::interfaces object
 #   e.g. in yaml set 
-#   pcapture::interfaces: "%{alias(network::interfaces)}"
 class pcapture (
   Stdlib::Absolutepath       $tools         = '/usr/local/bin',
   Stdlib::Absolutepath       $data          = '/opt/pcap',
@@ -32,12 +31,16 @@ class pcapture (
   Integer[1,3600]            $interval      = 300,
   Stdlib::Absolutepath       $xz_wrapper    = '/usr/local/bin/xz_wrapper.sh',
   Boolean                    $enable        = true,
-  Hash                       $interfaces    = {}
+  Optional[Array[String]]    $interfaces    = undef,
 ) {
 
   $ensure = $enable ? {
     true    => 'present',
     default => 'absent',
+  }
+  $_listen_interfaces = $listen_interfaces ? {
+    undef   => $facts['networking']['interfaces'].keys(),
+    default => $listen_interfaces,
   }
   $_directories = [ $data, ]
   File { mode => '0755' }
