@@ -38,9 +38,9 @@ class pcapture (
     true    => 'present',
     default => 'absent',
   }
-  $_listen_interfaces = $listen_interfaces ? {
+  $_interfaces = $interfaces ? {
     undef   => $facts['networking']['interfaces'].keys(),
-    default => $listen_interfaces,
+    default => $interfaces,
   }
   $_directories = [ $data, ]
   File { mode => '0755' }

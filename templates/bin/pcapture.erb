@@ -12,7 +12,7 @@ else
   raise Puppet::Error, "invalid cfg, collect_ans and collect_qry are both == false"
 end
 -%>
-INTERFACES="<%= @interfaces.keys.join(' ') %>"
+INTERFACES="<%= @_interfaces.keys.join(' ') %>"
 DIR=<%= @data %>
 INTERVAL=<%= @interval %>
 
