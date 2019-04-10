@@ -12,6 +12,8 @@ else
   raise Puppet::Error, "invalid cfg, collect_ans and collect_qry are both == false"
 end
 -%>
+INTERFACES="
+<%- @_interfaces.each do |eth| if !@eth.start_with?("dummy", "lo") %> <%= @eth %> " " <% end end %>
 INTERFACES="<%= @_interfaces.join(' ') %>"
 DIR=<%= @data %>
 INTERVAL=<%= @interval %>
