@@ -13,7 +13,7 @@ else
 end
 -%>
 INTERFACES="<%= @_interfaces.join(' ') %>"
-INTERFACES="<%= @_interfaces.each do |eth| if ! eth.start_with?(‘dummy’, ‘lo’) %><%= @eth %><% end %>”
+INTERFACES="<%= @_interfaces.each do |eth| %><%= @eth %><% end %>”
 DIR=<%= @data %>
 INTERVAL=<%= @interval %>
 
