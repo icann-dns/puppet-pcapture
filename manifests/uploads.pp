@@ -4,7 +4,7 @@ class pcapture::uploads (
   String                                       $destination_base_path,
   String                                       $service,
   Integer[0,10000]                             $bwlimit,
-  Hash[String[1], pcapture::Upload] $uploads,
+  Hash[String[1], Pcapture::Upload]            $uploads,
 ) {
   include file_upload
   $destination_path = defined('$::node_short_name') ? {
