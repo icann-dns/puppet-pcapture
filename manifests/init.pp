@@ -32,7 +32,6 @@ class pcapture (
   Stdlib::Absolutepath        $xz_wrapper        = '/usr/local/bin/xz_wrapper.sh',
   Boolean                     $enable            = true,
   Optional[Array[String]]     $interfaces        = undef,
-  String                      $service           = undef,
   Boolean                     $enable_upload     = false,
   Optional[String]            $upload_dir        = undef,
   Optional[Tea::Host]         $upload_host       = undef,
@@ -77,8 +76,8 @@ class pcapture (
       require => File["${tools}/pcaprotate"];
   }
   if $enable_upload {
-    if !$service or !$upload_dir or !$upload_key_source or !$upload_user or !$upload_host {
-      fail('if using enable_upload then you must specify all $service, $upload_dir, $upload_key_source, $upload_user and $upload_host')
+    if !$upload_dir or !$upload_key_source or !$upload_user or !$upload_host {
+      fail('if using enable_upload then you must specify all $upload_dir, $upload_key_source, $upload_user and $upload_host')
     }
     include ::file_upload
     $destination_path = defined('$::node_short_name') ? {
