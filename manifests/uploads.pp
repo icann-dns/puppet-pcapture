@@ -1,7 +1,7 @@
 # == Class:pcapture::upload
 # 
 class pcapture::uploads (
-  String                                       $data,
+  String                                       $srcdir,
   String                                       $destination_base_path,
   String                                       $service,
   Integer[0,10000]                             $bwlimit,
@@ -15,7 +15,7 @@ class pcapture::uploads (
   $uploads.each |String $name, Hash $config| {
     file_upload::upload {$name:
       bwlimit             => $bwlimit,
-      data                => $data,
+      data                => $srcdir,
       destination_path    => $destination_path,
       destination_host    => $config['destination_host'],
       patterns            => $config['patterns'],
