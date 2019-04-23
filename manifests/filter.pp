@@ -12,8 +12,8 @@ class pcapture::filter (
   file {
     $pcapfilter:
       ensure => $ensure,
-	  source => 'puppet:///modules/pcapture/bin/pcapture-filter.sh',
-	  mode   => '0755';
+      source => 'puppet:///modules/pcapture/bin/pcapture-filter.sh',
+      mode   => '0755';
   }
   cron {
     'pcapfilter':
@@ -21,5 +21,4 @@ class pcapture::filter (
       command => "/usr/bin/flock -n /var/lock/pcapfilter.lock ${pcapfilter}",
       user    => 'root',
       require => File["${pcapfilter}"];
-  
 }
