@@ -22,16 +22,16 @@
 #   This should be aliased to the network::interfaces object
 #   e.g. in yaml set 
 class pcapture (
-  Stdlib::Absolutepath       $tools         = '/usr/local/bin',
-  Stdlib::Absolutepath       $dstdir          = '/opt/pcap',
-  Boolean                    $collect_ans   = false,
-  Boolean                    $collect_qry   = true,
-  Optional[String]           $filter        = undef,
-  Array[Stdlib::Ip::Address] $ip_addresses  = [],
-  Integer[1,3600]            $interval      = 300,
-  Stdlib::Absolutepath       $xz_wrapper    = '/usr/local/bin/xz_wrapper.sh',
-  Boolean                    $enable        = true,
-  Optional[Array[String]]    $interfaces    = undef,
+  Stdlib::Absolutepath       $tools        = '/usr/local/bin',
+  Stdlib::Absolutepath       $dstdir       = '/opt/pcap',
+  Boolean                    $collect_ans  = false,
+  Boolean                    $collect_qry  = true,
+  Optional[String]           $filter       = undef,
+  Array[Stdlib::Ip::Address] $ip_addresses = [],
+  Integer[1,3600]            $interval     = 300,
+  Stdlib::Absolutepath       $xz_wrapper   = '/usr/local/bin/xz_wrapper.sh',
+  Boolean                    $enable       = true,
+  Optional[Array[String]]    $interfaces   = undef,
 ) {
 
   $ensure = $enable ? {
