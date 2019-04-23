@@ -3,10 +3,10 @@
 class pcapture::filter (
   Stdlib::Absolutepath  $pcapfilter = '/usr/local/bin/pcapture-filter.sh',
   Boolean               $enable     = true,
-  Stdlib::Absolutepath  $data       = '/opt/pcap',
+  Stdlib::Absolutepath  $srcdir     = '/opt/pcap',
   Stdlib::Absolutepath  $dstdir     = '/opt/pcap-filtered',
   String                $regexf     = '*.ignored.pcap.xz',
-  String                $filter     = '(dst host 199.7.83.42 or dst host 2001:500:9f::42) and (icmp or icmp6)'
+  String                $filter     = '(dst host 199.7.83.42 or dst host 2001:500:9f::42)'
 ) {
   $ensure = $enable ? {
     true    => 'present',
@@ -20,9 +20,9 @@ class pcapture::filter (
     source => 'puppet:///modules/pcapture/bin/pcapture-filter.sh',
     mode   => '0755';
   }
-  cron { 'pcapfilter-ICMP':
+  cron { 'pcapfilter':
     ensure  => $ensure,
-    command => "/usr/bin/flock -n /var/lock/pcapfilter.lock ${pcapfilter} -s ${data} -d ${dstdir} -r ${regexf} -f ${filter}",
+    command => "/usr/bin/flock -n /var/lock/pcapfilter.lock ${pcapfilter} -s ${srcdir} -d ${dstdir} -r ${regexf} -f ${filter}",
     user    => 'root',
     require => File["${pcapfilter}"];
   }

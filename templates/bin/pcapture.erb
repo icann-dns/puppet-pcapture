@@ -13,7 +13,7 @@ else
 end
 -%>
 INTERFACES="<%- @_interfaces.each do |eth| if ! eth.start_with?("dummy", "lo") %><%= eth %> <% end end %>"
-DIR=<%= @data %>
+DIR=<%= @dstdir %>
 INTERVAL=<%= @interval %>
 
 # If this script has been updated we kill any running dumps so that they will be restarted with any new settings

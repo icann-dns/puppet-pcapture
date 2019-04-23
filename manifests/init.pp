@@ -2,7 +2,7 @@
 #   module to configure tcpdump to collect pacap files for DNS traffic
 # @param tools
 #   where to install the pcap tools
-# @param data
+# @param dstdir
 #   where to store pcap files
 # @param collect_ans
 #   collect DNS Answers
@@ -23,7 +23,7 @@
 #   e.g. in yaml set 
 class pcapture (
   Stdlib::Absolutepath       $tools         = '/usr/local/bin',
-  Stdlib::Absolutepath       $data          = '/opt/pcap',
+  Stdlib::Absolutepath       $dstdir          = '/opt/pcap',
   Boolean                    $collect_ans   = false,
   Boolean                    $collect_qry   = true,
   Optional[String]           $filter        = undef,
@@ -42,7 +42,7 @@ class pcapture (
     undef   => split($::interfaces, ','),
     default => $interfaces,
   }
-  $_directories = [ $data, ]
+  $_directories = [ $dstdir, ]
   File { mode => '0755' }
   ensure_resource(
     'file', $_directories, { 'ensure' => 'directory', mode => '0755' }
