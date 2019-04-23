@@ -1,7 +1,7 @@
 # == Class:pcapture::filter
 # 
 class pcapture::filter (
-  Stdlib::Absolutepath  $pcapfilter = '/usr/local/bin/pcapture-filter.sh',
+  Stdlib::Absolutepath  $tools      = '/usr/local/bin',  
   Boolean               $enable     = true,
   Stdlib::Absolutepath  $srcdir     = '/opt/pcap',
   Stdlib::Absolutepath  $dstdir     = '/opt/pcap-filtered',
@@ -15,15 +15,25 @@ class pcapture::filter (
   file { $dstdir:
     ensure => directory,
   }
-  file { $pcapfilter:
+  file { "${tools}/pcapfilter":
     ensure => $ensure,
     source => 'puppet:///modules/pcapture/bin/pcapture-filter.sh',
     mode   => '0755';
+  }
+  file { "${tools}/pcaprotate":
+    ensure  => $ensure,
+    content => template('pcapture/bin/pcaprotate.erb');
   }
   cron { 'pcapfilter':
     ensure  => $ensure,
     command => "/usr/bin/flock -n /var/lock/pcapfilter.lock ${pcapfilter} -s ${srcdir} -d ${dstdir} -r ${regexf} -f ${filter}",
     user    => 'root',
-    require => File[$pcapfilter];
+    require => File["${tools}/pcapfilter"];
+  }
+  cron { 'pcaprotate':
+    ensure  => $ensure,
+    command => "/usr/bin/flock -n /var/lock/pcaprotate.lock ${tools}/pcaprotate",
+    user    => 'root',
+    require => File["${tools}/pcaprotate"];
   }
 }

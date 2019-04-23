@@ -59,7 +59,7 @@ class pcapture (
     ensure => $ensure,
     source => 'puppet:///modules/pcapture/bin/xz_wrapper.sh';
   }
-  cron { 'pcapcapture':
+  cron { 'pcapture':
     ensure  => $ensure,
     command => "${tools}/pcapture",
     user    => 'root',
