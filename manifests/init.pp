@@ -47,27 +47,28 @@ class pcapture (
   ensure_resource(
     'file', $_directories, { 'ensure' => 'directory', mode => '0755' }
   )
-  file {
-    "${tools}/pcapture":
-      ensure  => present,
-      content => template('pcapture/bin/pcapture.erb');
-    "${tools}/pcaprotate":
-      ensure  => present,
-      content => template('pcapture/bin/pcaprotate.erb');
-    $xz_wrapper:
-      ensure => present,
-      source => 'puppet:///modules/pcapture/bin/xz_wrapper.sh';
+  file { "${tools}/pcapture":
+    ensure  => present,
+    content => template('pcapture/bin/pcapture.erb');
   }
-  cron {
-    'pcapcapture':
-      ensure  => $ensure,
-      command => "${tools}/pcapture",
-      user    => 'root',
-      require => File["${tools}/pcapture"];
-    'pcaprotate':
-      ensure  => $ensure,
-      command => "/usr/bin/flock -n /var/lock/pcaprotate.lock ${tools}/pcaprotate",
-      user    => 'root',
-      require => File["${tools}/pcaprotate"];
+  file { "${tools}/pcaprotate":
+    ensure  => present,
+    content => template('pcapture/bin/pcaprotate.erb');
+  }
+  file { $xz_wrapper:
+    ensure => present,
+    source => 'puppet:///modules/pcapture/bin/xz_wrapper.sh';
+  }
+  cron { 'pcapcapture':
+    ensure  => $ensure,
+    command => "${tools}/pcapture",
+    user    => 'root',
+    require => File["${tools}/pcapture"];
+  }
+  cron { 'pcaprotate':
+    ensure  => $ensure,
+    command => "/usr/bin/flock -n /var/lock/pcaprotate.lock ${tools}/pcaprotate",
+    user    => 'root',
+    require => File["${tools}/pcaprotate"];
   }
 }

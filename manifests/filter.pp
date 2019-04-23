@@ -12,18 +12,18 @@ class pcapture::filter (
     true    => 'present',
     default => 'absent',
   }
-
-  file {
-    $pcapfilter:
-      ensure => $ensure,
-      source => 'puppet:///modules/pcapture/bin/pcapture-filter.sh',
-      mode   => '0755';
+  file { $dstdir:
+    ensure => directory,
   }
-  cron {
-    'pcapfilter-ICMP':
-      ensure  => $ensure,
-      command => "/usr/bin/flock -n /var/lock/pcapfilter.lock ${pcapfilter} -s ${data} -d ${dstdir} -r ${regexf} -f ${filter}",
-      user    => 'root',
-      require => File["${pcapfilter}"];
+  file { $pcapfilter:
+    ensure => $ensure,
+    source => 'puppet:///modules/pcapture/bin/pcapture-filter.sh',
+    mode   => '0755';
+  }
+  cron { 'pcapfilter-ICMP':
+    ensure  => $ensure,
+    command => "/usr/bin/flock -n /var/lock/pcapfilter.lock ${pcapfilter} -s ${data} -d ${dstdir} -r ${regexf} -f ${filter}",
+    user    => 'root',
+    require => File["${pcapfilter}"];
   }
 }
