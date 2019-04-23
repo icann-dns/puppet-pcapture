@@ -48,15 +48,15 @@ class pcapture (
     'file', $_directories, { 'ensure' => 'directory', mode => '0755' }
   )
   file { "${tools}/pcapture":
-    ensure  => present,
+    ensure  => $ensure,
     content => template('pcapture/bin/pcapture.erb');
   }
   file { "${tools}/pcaprotate":
-    ensure  => present,
+    ensure  => $ensure,
     content => template('pcapture/bin/pcaprotate.erb');
   }
   file { $xz_wrapper:
-    ensure => present,
+    ensure => $ensure,
     source => 'puppet:///modules/pcapture/bin/xz_wrapper.sh';
   }
   cron { 'pcapcapture':
