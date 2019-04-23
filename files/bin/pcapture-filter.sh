@@ -1,16 +1,18 @@
 #!/bin/bash
 #
-# pcapture-filter.sh: Convert set of files into filtered ones with a pattern
+# pcapture-filter.sh: Converts a set of files from DSTDIR into filtered PCAPs (compressed) with a pattern
 #
 # 2019 ICANN DNS Engineering
 
 PATH=/usr/local/bin:/usr/bin:/bin
 
-UNXZ="/usr/bin/unxz -k -c"
+XZ="/usr/bin/xz --compress"
+UNXZ="/usr/bin/unxz --keep --stdout"
 TCPDUMP="/usr/sbin/tcpdump"
 LOG_ALLFILES="allfiles.log"
 LOG_LASTFILE="lastfile.log"
 
+### Parameters
 while getopts "s:d:r:P:" opt; do
 	case $opt in
 		s ) SRCDIR=${OPTARG} ;;
@@ -37,7 +39,7 @@ if [ -z ${FILTER} ] ; then
 	FILTER="'(dst host 199.7.83.42 or dst host 2001:500:9f::42) and (icmp or icmp6)'"
 fi
 
-# Main
+### Main
 mkdir -p ${DSTDIR}
 cd ${SRCDIR}
 find . -maxdepth 1 -type f -name "${REGEXF}" -printf '%P\n' 2>/dev/null|sort > ${DSTDIR}/${LOG_ALLFILES}
@@ -61,9 +63,8 @@ for FILE in $(tail -n +${NUM} ${DSTDIR}/${LOG_ALLFILES}) ; do
 		newFILE="$(echo ${FILE} | cut -d '.' -f1)"
 		${UNXZ} ${SRCDIR}/${FILE} | ${TCPDUMP} -r - -w ${DSTDIR}/${newFILE}.pcap "${FILTER}"
 		if [ $? -eq 0 ] ; then
-			xz ${DSTDIR}/${newFILE}.pcap
+			${XZ} ${DSTDIR}/${newFILE}.pcap
 			echo ${FILE} > ${DSTDIR}/${LOG_LASTFILE}
 		fi
 	fi
 done
-	
