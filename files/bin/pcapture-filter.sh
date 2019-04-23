@@ -11,6 +11,7 @@ UNXZ="/usr/bin/unxz --keep --stdout"
 TCPDUMP="/usr/sbin/tcpdump"
 LOG_ALLFILES="allfiles.log"
 LOG_LASTFILE="lastfile.log"
+HOST=$(hostname -f | cut -c -11 | tr "." "-" )
 
 ### Parameters
 while getopts "s:d:r:P:" opt; do
@@ -36,7 +37,7 @@ if [ -z ${REGEXF} ] ; then
 fi
 
 if [ -z ${FILTER} ] ; then
-	FILTER="'(dst host 199.7.83.42 or dst host 2001:500:9f::42) and (icmp or icmp6)'"
+	FILTER="(dst host 199.7.83.42 or dst host 2001:500:9f::42) and (icmp or icmp6)"
 fi
 
 ### Main
@@ -60,8 +61,8 @@ fi
 for FILE in $(tail -n +${NUM} ${DSTDIR}/${LOG_ALLFILES}) ; do
 	if [ ! -e ${DSTDIR}/${FILE} ] ; then
 		#unxz -k -c /opt/pcap/20190401-000403_300.ignored.pcap.xz | tcpdump -n -r -
-		newFILE="$(echo ${FILE} | cut -d '.' -f1)"
-		${UNXZ} ${SRCDIR}/${FILE} | ${TCPDUMP} -r - -w ${DSTDIR}/${newFILE}.pcap "${FILTER}"
+		newFILE="${HOST}.$(echo ${FILE} | cut -d '.' -f1)"
+		${UNXZ} ${SRCDIR}/${FILE} | ${TCPDUMP} -r - -w ${DSTDIR}/${newFILE}.pcap "${FILTER}" 2>/dev/null
 		if [ $? -eq 0 ] ; then
 			${XZ} ${DSTDIR}/${newFILE}.pcap
 			echo ${FILE} > ${DSTDIR}/${LOG_LASTFILE}
