@@ -20,7 +20,7 @@ class pcapture::filter (
       mode   => '0755';
   }
   cron {
-    'pcapfilter':
+    'pcapfilter-ICMP':
       ensure  => $ensure,
       command => "/usr/bin/flock -n /var/lock/pcapfilter.lock ${pcapfilter} -s ${srcdir} -d ${dstdir} -r ${regexf} -f ${filter}",
       user    => 'root',
