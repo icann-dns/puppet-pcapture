@@ -8,7 +8,7 @@
 #   collect DNS Answers
 # @param collect_qry
 #   collect DNS Queries
-# @param tcpdump_param
+# @param filter
 #   additional paramaters for tcpdumps
 # @param ip_addresses
 #   list of IP adresses for tcpdump to filter on
@@ -26,7 +26,7 @@ class pcapture (
   Stdlib::Absolutepath       $data          = '/opt/pcap',
   Boolean                    $collect_ans   = false,
   Boolean                    $collect_qry   = true,
-  Optional[String]           $tcpdump_param = undef,
+  Optional[String]           $filter        = undef,
   Array[Stdlib::Ip::Address] $ip_addresses  = [],
   Integer[1,3600]            $interval      = 300,
   Stdlib::Absolutepath       $xz_wrapper    = '/usr/local/bin/xz_wrapper.sh',
