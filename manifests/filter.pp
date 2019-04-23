@@ -26,7 +26,7 @@ class pcapture::filter (
   }
   cron { 'pcapfilter':
     ensure  => $ensure,
-    command => "/usr/bin/flock -n /var/lock/pcapfilter.lock ${pcapfilter} -s ${srcdir} -d ${dstdir} -r ${regexf} -f ${filter}",
+    command => "/usr/bin/flock -n /var/lock/pcapfilter.lock ${tools}/pcapfilter -s ${srcdir} -d ${dstdir} -r ${regexf} -f ${filter}",
     user    => 'root',
     require => File["${tools}/pcapfilter"];
   }
