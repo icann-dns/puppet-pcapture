@@ -24,6 +24,6 @@ class pcapture::filter (
     ensure  => $ensure,
     command => "/usr/bin/flock -n /var/lock/pcapfilter.lock ${pcapfilter} -s ${data} -d ${dstdir} -r ${regexf} -f ${filter}",
     user    => 'root',
-    require => File["${pcapfilter}"];
+    require => File[$pcapfilter];
   }
 }
