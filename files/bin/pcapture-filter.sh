@@ -59,8 +59,9 @@ for FILE in $(tail -n +${NUM} ${DSTDIR}/${LOG_ALLFILES}) ; do
 	if [ ! -e ${DSTDIR}/${FILE} ] ; then
 		#unxz -k -c /opt/pcap/20190401-000403_300.ignored.pcap.xz | tcpdump -n -r -
 		newFILE="$(echo ${FILE} | cut -d '.' -f1)"
-		${UNXZ} ${SRCDIR}/${FILE} | ${TCPDUMP} -r - -w ${DSTDIR}/${newFILE} "${FILTER}"
+		${UNXZ} ${SRCDIR}/${FILE} | ${TCPDUMP} -r - -w ${DSTDIR}/${newFILE}.pcap "${FILTER}"
 		if [ $? -eq 0 ] ; then
+			xz ${DSTDIR}/${newFILE}.pcap
 			echo ${FILE} > ${DSTDIR}/${LOG_LASTFILE}
 		fi
 	fi
