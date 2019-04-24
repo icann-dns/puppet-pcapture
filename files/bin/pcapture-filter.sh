@@ -63,10 +63,13 @@ for FILE in $(tail -n +${NUM} ${DSTDIR}/${LOG_ALLFILES}) ; do
 		#unxz -k -c /opt/pcap/20190401-000403_300.ignored.pcap.xz | tcpdump -n -r -
 		# Original filename like: 20190423-201634_300.ignored.pcap.xz
 		# New file name (filtered): 20190423-201634_300.filtered.pcap.xz
-		newFILE="$(echo ${FILE} | cut -d '.' -f1).filtered.pcap"
-		${UNXZ} ${SRCDIR}/${FILE} | ${TCPDUMP} -r - -w ${DSTDIR}/${newFILE} "${FILTER}" 2>/dev/null
+		newFILE="$(echo ${FILE} | cut -d '.' -f1)"
+		${UNXZ} ${SRCDIR}/${FILE} | ${TCPDUMP} -r - -w ${DSTDIR}/${newFILE}.temp "${FILTER}" 2>/dev/null
 		if [ $? -eq 0 ] ; then
-			${XZ} ${DSTDIR}/${newFILE}
+			# First we compress the temp file
+			${XZ} ${DSTDIR}/${newFILE}.temp
+			# After it's compressed we renamed it (to avoid to transfer a file in the middle of compression process)
+			mv ${DSTDIR}/${newFILE}.temp.xz ${DSTDIR}/${newFILE}.filtered.pcap.xz 
 			echo ${FILE} > ${DSTDIR}/${LOG_LASTFILE}
 		fi
 	fi
