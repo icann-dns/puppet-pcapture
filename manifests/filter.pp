@@ -1,7 +1,7 @@
 # == Class:pcapture::filter
 # 
 class pcapture::filter (
-  Stdlib::Absolutepath  $tools      = '/usr/local/bin',  
+  Stdlib::Absolutepath  $tools      = '/usr/local/bin',
   Boolean               $enable     = true,
   Stdlib::Absolutepath  $srcdir     = '/opt/pcap',
   Stdlib::Absolutepath  $dstdir     = '/opt/pcap-filtered',
