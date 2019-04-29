@@ -37,7 +37,7 @@ for INT in ${INTERFACES}; do
       fuser -k ${LOCK}
     fi
   else
-    flock -n ${LOCK} /usr/sbin/tcpdump -i ${INT} -nn -s0 \
+    flock -n ${LOCK} /usr/sbin/tcpdump -p -i ${INT} -nn -s0 \
       -w ${DIR}/%Y%m%d-%H%M%S_${INTERVAL}_${INT}.pcap -z xz_wrapper.sh -G ${INTERVAL} \
 <% if @filter == 'undef' %>
       '<%= @dst %> net ( 
