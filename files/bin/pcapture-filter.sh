@@ -36,8 +36,8 @@ if [ -z ${REGEXF} ] ; then
 	REGEXF='*.ignored.pcap.xz'
 fi
 
-if [ -z ${FILTER} ] ; then
-	FILTER="(dst host 199.7.83.42 or dst host 2001:500:9f::42) and (icmp or icmp6)"
+if [ -z "${FILTER}" ] ; then
+	FILTER="((dst host 199.7.83.42 or dst host 2001:500:9f::42) and (icmp or icmp6))"
 fi
 
 ### Main
@@ -67,8 +67,8 @@ for FILE in $(tail -n +${NUM} ${DSTDIR}/${LOG_ALLFILES}) ; do
 		${UNXZ} ${SRCDIR}/${FILE} | ${TCPDUMP} -r - -w ${DSTDIR}/${newFILE}.temp "${FILTER}" 2>/dev/null
 		if [ $? -eq 0 ] ; then
 			# We are only interested on files with usual info (> 24bytes)
-			FILESIZE=$(stat -c%s ${DSTDIR}/${newFILE}.temp ) 
-			if [ $FILESIZE -gt 24 ] ; then
+			FILESIZE=$(stat -c%s ${DSTDIR}/${newFILE}.temp 2>/dev/null)
+			if [ ! -z $FILESIZE ] && [ $FILESIZE -gt 24 ] ; then
 				# First we compress the temp file
 				${XZ} ${DSTDIR}/${newFILE}.temp
 				# After it's compressed we renamed it (to avoid to transfer a file in the middle of compression process)
