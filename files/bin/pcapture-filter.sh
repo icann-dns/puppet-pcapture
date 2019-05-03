@@ -14,7 +14,7 @@ LOG_LASTFILE="lastfile.log"
 #HOST=$(hostname -f | cut -c -11 | tr "." "-" )
 
 ### Parameters
-while getopts "s:d:r:P:" opt; do
+while getopts "s:d:r:f:" opt; do
 	case $opt in
 		s ) SRCDIR=${OPTARG} ;;
 		d ) DSTDIR=${OPTARG} ;;
@@ -66,10 +66,14 @@ for FILE in $(tail -n +${NUM} ${DSTDIR}/${LOG_ALLFILES}) ; do
 		newFILE="$(echo ${FILE} | cut -d '.' -f1)"
 		${UNXZ} ${SRCDIR}/${FILE} | ${TCPDUMP} -r - -w ${DSTDIR}/${newFILE}.temp "${FILTER}" 2>/dev/null
 		if [ $? -eq 0 ] ; then
-			# First we compress the temp file
-			${XZ} ${DSTDIR}/${newFILE}.temp
-			# After it's compressed we renamed it (to avoid to transfer a file in the middle of compression process)
-			mv ${DSTDIR}/${newFILE}.temp.xz ${DSTDIR}/${newFILE}.filtered.pcap.xz 
+                        if [ -s ${DSTDIR}/${newFILE}.temp ] ; then
+		                 # First we compress the temp file
+			         ${XZ} ${DSTDIR}/${newFILE}.temp
+			         # After it's compressed we renamed it (to avoid to transfer a file in the middle of compression process)
+			         mv ${DSTDIR}/${newFILE}.temp.xz ${DSTDIR}/${newFILE}.filtered.pcap.xz
+                        else
+                                 rm ${DSTDIR}/${newFILE}.temp
+                        fi
 			echo ${FILE} > ${DSTDIR}/${LOG_LASTFILE}
 		fi
 	fi
