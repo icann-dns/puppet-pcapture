@@ -66,7 +66,8 @@ for FILE in $(tail -n +${NUM} ${DSTDIR}/${LOG_ALLFILES}) ; do
 		newFILE="$(echo ${FILE} | cut -d '.' -f1)"
 		${UNXZ} ${SRCDIR}/${FILE} | ${TCPDUMP} -r - -w ${DSTDIR}/${newFILE}.temp "${FILTER}" 2>/dev/null
 		if [ $? -eq 0 ] ; then
-                        if [ -s ${DSTDIR}/${newFILE}.temp ] ; then
+                        FILESIZE=$(stat -c%s ${DSTDIR}/${newFILE}.temp ) 
+                        if [ $FILESIZE > 24 ] ; then
 		                 # First we compress the temp file
 			         ${XZ} ${DSTDIR}/${newFILE}.temp
 			         # After it's compressed we renamed it (to avoid to transfer a file in the middle of compression process)
