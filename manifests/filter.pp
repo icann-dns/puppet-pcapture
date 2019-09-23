@@ -22,7 +22,8 @@ class pcapture::filter (
   }
   file { "${tools}/pcaprotate":
     ensure  => $ensure,
-    content => template('pcapture/bin/pcaprotate.erb');
+    content => template('pcapture/bin/pcaprotate.erb'),
+    mode    => '0755';
   }
   cron { 'pcapfilter':
     ensure  => $ensure,
