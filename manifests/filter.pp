@@ -20,11 +20,22 @@ class pcapture::filter (
     source => 'puppet:///modules/pcapture/bin/pcapture-filter.sh',
     mode   => '0755';
   }
+  file { "${tools}/pcaprotate":
+    ensure  => $ensure,
+    content => template('pcapture/bin/pcaprotate.erb'),
+    mode    => '0755';
+  }
   cron { 'pcapfilter':
     ensure  => $ensure,
     command => "/usr/bin/flock -n /var/lock/pcapfilter.lock ${tools}/pcapfilter -s ${srcdir} -d ${dstdir} -r ${regexf} -f ${filter}",
     user    => 'root',
     minute  => '*/10',
     require => File["${tools}/pcapfilter"];
+  }
+  cron { 'pcaprotate':
+    ensure  => $ensure,
+    command => "/usr/bin/flock -n /var/lock/pcaprotate.lock ${tools}/pcaprotate",
+    user    => 'root',
+    require => File["${tools}/pcaprotate"];
   }
 }
