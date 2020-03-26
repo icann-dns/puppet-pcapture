@@ -12,7 +12,7 @@ describe 'pcapture' do
       # interval: "300",
       # xz_wrapper: "/usr/local/bin/xz_wrapper.sh",
       # enable: true,
-      ensure: 'present',
+
       interfaces: { 'eth0' => { 'addr4' => '192.0.2.1' } },
     }
   end
