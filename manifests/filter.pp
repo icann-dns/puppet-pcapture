@@ -1,12 +1,15 @@
 # == Class:pcapture::filter
 # 
 class pcapture::filter (
-  Stdlib::Absolutepath  $tools      = '/usr/local/bin',
-  Boolean               $enable     = true,
-  Stdlib::Absolutepath  $srcdir     = '/opt/pcap',
-  Stdlib::Absolutepath  $dstdir     = '/opt/pcap-filtered',
-  String                $regexf     = '*.ignored.pcap.xz',
-  String                $filter     = '(dst host 199.7.83.42 or dst host 2001:500:9f::42)'
+  Stdlib::Absolutepath  $tools        = '/usr/local/bin',
+  Boolean               $enable       = true,
+  Stdlib::Absolutepath  $srcdir       = '/opt/pcap',
+  Stdlib::Absolutepath  $dstdir       = '/opt/pcap-filtered',
+  String                $regexf       = '*.ignored.pcap.xz',
+  String                $filter       = '(dst host 199.7.83.42 or dst host 2001:500:9f::42)'
+  String                $expire_regex = '*.pcap.xz',
+  Integer               $expire_days  = 30,
+
 ) {
   $ensure = $enable ? {
     true    => 'present',

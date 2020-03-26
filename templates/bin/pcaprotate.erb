@@ -1,7 +1,19 @@
 #!/bin/sh
 
 DIR=<%= @dstdir %>
+EXP_REGEX=<%= @expire_regex %>
+EXP_DAYS=<% @expire_days %>
 
 # Delete any file that is past 3 days. 
 
-find ${DIR} -mtime +3 -type f -exec rm '{}' \; 2>/dev/null
+find ${DIR} -mtime +${EXP_DAYS} -type f -name "${EXP_REGEX}" -exec rm '{}' \; 2>/dev/null
+
+while [ $( df ${DIR} | tail -1 | awk '{print $5}' | tr -d '%' ) -gt 70 ]; do
+    oldest=$( find ${DIR} -name "${EXP_REGEX}" -type f 2>/dev/null | sort | head -1 )
+    if [ ! ${oldest} ]; then
+		logger -t pcaprotate no pcaps to rotate, exiting
+		exit
+	fi
+		logger -t pcaprotate removing ${oldest}
+		rm -f ${oldest} 2>/dev/null
+done

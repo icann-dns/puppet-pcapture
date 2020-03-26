@@ -32,6 +32,8 @@ class pcapture (
   Stdlib::Absolutepath       $xz_wrapper   = '/usr/local/bin/xz_wrapper.sh',
   Boolean                    $enable       = true,
   Optional[Array[String]]    $interfaces   = undef,
+  String                     $expire_regex = '*.pcap.xz',
+  Integer                    $expire_days  = 60,
 ) {
 
   $ensure = $enable ? {
